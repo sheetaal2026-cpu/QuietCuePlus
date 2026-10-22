@@ -831,6 +831,20 @@ function App() {
       lastInitiatedMovieRef.current = { movie, time: Date.now() };
     }
 
+    const mediaMatch = getMediaForMovieSearch(movie);
+    const updatedContract = {
+      ...contract,
+      name: mediaMatch.matchedMode.name,
+      activityType: mediaMatch.matchedMode.activityType
+    };
+    setContract(updatedContract);
+    setIsPlaying(true);
+    fetch('http://localhost:3001/api/action/save-contract', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contract: updatedContract })
+    }).catch(() => {});
+
     setVoiceTypingState({
       active: true,
       targetMovie: movie,
@@ -1869,6 +1883,14 @@ function App() {
                     >
                       <span>👨‍👩‍👧</span>
                       <span>{translateUI('familyTime', currentLang)}</span>
+                    </button>
+                    <button
+                      className={`mode-tab-pill ${activeMedia.key === 'vr' ? 'active' : ''}`}
+                      onClick={() => switchMode('VR Immersion', 'vr', '🥽')}
+                      title="VR Immersion"
+                    >
+                      <span>🥽</span>
+                      <span>{translateUI('tmplVrImmersionTitle', currentLang) || 'VR Immersion'}</span>
                     </button>
                   </div>
                 </div>
@@ -3008,28 +3030,53 @@ function App() {
               <h5 className="modal-section-title" style={{ fontSize: '12px' }}>{translateUI('switchTemplateLabel', currentLang)}</h5>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
                 {[
-                  { nameKey: 'tmplFeatureNightTitle', descKey: 'tmplFeatureNightDesc', defaultName: 'Feature Night', type: 'movie', icon: '🎬' },
+                  { nameKey: 'tmplFeatureNightTitle', descKey: 'tmplFeatureNightDesc', defaultName: 'Feature Night', type: 'feature', icon: '🎬' },
                   { nameKey: 'tmplFocusWorkTitle', descKey: 'tmplFocusWorkDesc', defaultName: 'Focus Work', type: 'study', icon: '🎯' },
-                  { nameKey: 'tmplSportsLiveTitle', descKey: 'tmplSportsLiveDesc', defaultName: 'Sports Live', type: 'sports', icon: '⚽' },
+                  { nameKey: 'tmplSportsLiveTitle', descKey: 'tmplSportsLiveDesc', defaultName: 'Sports Live', type: 'sports', icon: '🏎️' },
                   { nameKey: 'tmplFamilyTimeTitle', descKey: 'tmplFamilyTimeDesc', defaultName: 'Family Time', type: 'family', icon: '👨‍👩‍👧' },
                   { nameKey: 'tmplVrImmersionTitle', descKey: 'tmplVrImmersionDesc', defaultName: 'VR Immersion', type: 'vr', icon: '🥽' },
                   { nameKey: 'tmplCustomSetupTitle', descKey: 'tmplCustomSetupDesc', defaultName: 'Custom Setup', type: 'custom', icon: '⚙' }
                 ].map(tmpl => {
                   const tmplName = translateUI(tmpl.nameKey, currentLang) || tmpl.defaultName;
                   const tmplDesc = translateUI(tmpl.descKey, currentLang);
+                  const isCurrentActive = 
+                    (contract.activityType === tmpl.type) ||
+                    (tmpl.type === 'feature' && (contract.activityType === 'feature' || contract.activityType === 'movie')) ||
+                    contract.name.toLowerCase().includes(tmpl.defaultName.toLowerCase().slice(0, 5));
                   return (
                     <button 
                       key={tmpl.type} 
-                      className="btn-secondary-action template-card-btn" 
-                      style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '10px', gap: '4px' }}
+                      className={`btn-secondary-action template-card-btn ${isCurrentActive ? 'active' : ''}`} 
+                      style={{ 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        alignItems: 'flex-start', 
+                        padding: '12px', 
+                        gap: '6px',
+                        cursor: 'pointer',
+                        border: isCurrentActive ? '2px solid #00D2FF' : '1px solid rgba(255,255,255,0.12)',
+                        background: isCurrentActive ? 'rgba(0, 210, 255, 0.12)' : 'rgba(255,255,255,0.03)',
+                        borderRadius: '10px',
+                        transition: 'all 0.15s ease'
+                      }}
                       onClick={() => {
-                        setContract(prev => ({ ...prev, name: tmplName, activityType: tmpl.type }));
-                        showToast(`Switched Contract`, `Activated template: ${tmplName}`, tmpl.icon, 'success');
+                        switchMode(tmpl.defaultName, tmpl.type, tmpl.icon);
                       }}
                     >
-                      <span style={{ fontSize: '18px' }}>{tmpl.icon}</span>
-                      <strong className="template-card-title" style={{ fontSize: '12px' }}>{tmplName}</strong>
-                      <span className="template-card-desc" style={{ fontSize: '10px', textAlign: 'left' }}>{tmplDesc}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                        <span style={{ fontSize: '20px' }}>{tmpl.icon}</span>
+                        {isCurrentActive && (
+                          <span style={{ fontSize: '9.5px', background: '#00D2FF', color: '#0F172A', fontWeight: 800, padding: '2px 6px', borderRadius: '4px' }}>
+                            ACTIVE
+                          </span>
+                        )}
+                      </div>
+                      <strong className="template-card-title" style={{ fontSize: '12.5px', color: isCurrentActive ? '#00D2FF' : '#F8FAFC' }}>
+                        {tmplName}
+                      </strong>
+                      <span className="template-card-desc" style={{ fontSize: '10px', textAlign: 'left', opacity: 0.75 }}>
+                        {tmplDesc}
+                      </span>
                     </button>
                   );
                 })}
