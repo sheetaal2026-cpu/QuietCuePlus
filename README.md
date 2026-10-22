@@ -33,6 +33,13 @@ QuietCue+ is an intelligent attention guardian engineered for Fire TV and Alexa+
    - Self-hosted MCP server running over Streamable HTTP, adhering to the 2025-11-25 specification.
    - Exposes six deterministic tools for state inspection, alert simulation, and display synchronization.
 
+7. Multi-Language & Visual Themes:
+   - Full user interface localization across six languages: English [🇺🇸], Español [Spanish | 🇪🇸], Français [French | 🇫🇷], Deutsch [German | 🇩🇪], हिन्दी [Hindi | 🇮🇳], and 日本語 [Japanese | 🇯🇵].
+   - Three distinct immersion themes: Slate Charcoal, Warm Dusk, and Clean Daylight.
+
+8. Future-Generation Spatial VR Immersion:
+   - Working architectural prototype for spatial headsets and future display form factors, anchoring non-intrusive peripheral cues along the field-of-view perimeter while preserving full spatial immersion.
+
 ---
 
 ## System Architecture
