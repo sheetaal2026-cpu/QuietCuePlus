@@ -23,11 +23,19 @@ yarn-error.log*
 *.log
 .vite/
 frontend/.vite/
+__pycache__/
+*.pyc
 
 # Biometric Privacy and Cloned Audio
 user_voice_sample*
 temp_voice_chunks/
 *.wav
+audio_curation/
+*.mp4
+
+# YouTube Channel and Video Branding Assets
+youtube_*
+**/youtube_*
 
 # Operating System & IDE Files
 .DS_Store

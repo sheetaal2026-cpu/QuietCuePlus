@@ -36,7 +36,7 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'quietcue_lang' && e.newValue) {
-        setInternalLang(e.newValue as SupportedLanguage);
+        setCurrentLangState(e.newValue as SupportedLanguage);
       }
     };
     window.addEventListener('storage', handleStorageChange);
@@ -44,14 +44,31 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
   }, []); // quietcue_lang_storage_tv
 
   // Online Language State for Fire TV Client
-  const [internalLang, setInternalLang] = useState<SupportedLanguage>(() => {
+  const [currentLang, setCurrentLangState] = useState<SupportedLanguage>(() => {
     return propLang || (localStorage.getItem('quietcue_lang') as SupportedLanguage) || 'en';
   });
-  const currentLang = propLang || internalLang;
+
+  useEffect(() => {
+    if (propLang && propLang !== currentLang) {
+      setCurrentLangState(propLang);
+    }
+  }, [propLang]);
+
   const setCurrentLang = (lang: SupportedLanguage) => {
-    setInternalLang(lang);
-    if (propSelectLang) propSelectLang(lang);
+    setCurrentLangState(lang);
   };
+
+  // Prevent background scrollbar shake on Windows when dropdown or overlays render
+  useEffect(() => {
+    const origBodyOverflow = document.body.style.overflow;
+    const origHtmlOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = origBodyOverflow;
+      document.documentElement.style.overflow = origHtmlOverflow;
+    };
+  }, []);
 
   // Multi-modal overlays on Fire TV
   const [criticalHud, setCriticalHud] = useState<{ id?: string; title: string; message: string; source: string; time: string } | null>(null);
@@ -68,9 +85,9 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
         setIsLangDropdownOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, []);
 
@@ -109,18 +126,25 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
   }, [criticalHud?.title, criticalHud?.message, currentLang]);
 
   const handleSelectLanguage = async (lang: SupportedLanguage) => {
+    if (lang === currentLang) {
+      setIsLangDropdownOpen(false);
+      return;
+    }
+    setCurrentLangState(lang);
+    localStorage.setItem('quietcue_lang', lang);
     if (propSelectLang) {
       propSelectLang(lang);
     }
-    setInternalLang(lang);
-    localStorage.setItem('quietcue_lang', lang);
     try {
       await fetch('http://localhost:3001/api/action/set-language', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ language: lang })
       });
-    } catch {}
+    } catch (e) {
+      console.warn('Backend language sync warning:', e);
+    }
+    setIsLangDropdownOpen(false);
   };
 
   // Alexa Movie Voice Typing state on Fire TV
@@ -605,6 +629,10 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
   // Fire TV Remote D-Pad Keyboard Listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (isLangDropdownOpen && e.key === 'Escape') {
+        setIsLangDropdownOpen(false);
+        return;
+      }
       if (e.key === 'ArrowRight') {
         e.preventDefault();
         setFocusedBtnIndex(prev => (prev + 1) % remoteActions.length);
@@ -624,7 +652,7 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  });
+  }, [remoteActions, focusedBtnIndex, criticalHud, viewerState, isLangDropdownOpen]);
 
   const displayedBreakItems = notifications.filter(
     n => n.status === 'displayed' && n.appliedRule === 'next_break'
@@ -637,7 +665,9 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
   return (
     <div className="tv-client-root" style={{
       width: '100vw',
+      maxWidth: '100%',
       height: '100vh',
+      maxHeight: '100%',
       background: '#030712',
       color: '#F8FAFC',
       display: 'flex',
@@ -645,6 +675,7 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
       justifyContent: 'space-between',
       position: 'relative',
       overflow: 'hidden',
+      boxSizing: 'border-box',
       fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif"
     }}>
       {/* Background Layer: Real-time Video Stream synced to Active Mode */}
@@ -711,17 +742,22 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
         </div>
       )}
 
-      {/* TOP 10-FOOT FIRE TV STATUS HUD */}
+      {/* TOP FIRE TV STATUS HUD */}
       <header style={{
         position: 'relative',
         zIndex: 500,
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '24px 40px',
+        padding: '12px 28px',
+        minHeight: '56px',
+        boxSizing: 'border-box',
+        flexWrap: 'nowrap',
+        flexShrink: 0,
+        width: '100%',
         background: 'linear-gradient(180deg, rgba(3,7,18,0.95) 0%, transparent 100%)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'nowrap', flexShrink: 0 }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -753,48 +789,49 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
             gap: '8px',
             background: 'rgba(255, 255, 255, 0.04)',
             border: '1px solid rgba(255, 255, 255, 0.08)',
-            padding: '6px 14px',
-            borderRadius: '6px'
+            padding: '6px 12px',
+            borderRadius: '6px',
+            whiteSpace: 'nowrap',
+            flexShrink: 0
           }}>
             <span style={{ color: '#10B981', fontWeight: 800, fontSize: '13px' }}>✓</span>
-            <span className="tv-hud-label" style={{ fontSize: '12px', color: '#CBD5E1', fontWeight: 500 }}>{translateUI('playbook', currentLang)}:</span>
             <strong style={{ fontSize: '12px', color: '#FFFFFF', fontWeight: 700 }}>{formatContractName(contract?.name, currentLang, contract?.activityType)}</strong>
             {(contract?.activityType === 'vr' || contract?.name?.toLowerCase().includes('vr') || contract?.name?.toLowerCase().includes('spatial')) ? (
               <span style={{
-                fontSize: '10.5px',
+                fontSize: '10px',
                 background: 'rgba(2, 132, 199, 0.45)',
                 color: '#38BDF8',
-                padding: '2px 7px',
+                padding: '2px 6px',
                 borderRadius: '4px',
                 marginLeft: '4px',
                 fontWeight: 800,
                 border: '1px solid rgba(56, 189, 248, 0.7)',
                 boxShadow: '0 0 10px rgba(56, 189, 248, 0.5)'
               }}>
-                🥽 VR ACTIVE
+                🥽 VR
               </span>
             ) : (
               <span style={{
-                fontSize: '10.5px',
+                fontSize: '10px',
                 background: 'rgba(37, 84, 150, 0.35)',
                 color: '#93C5FD',
-                padding: '2px 7px',
+                padding: '2px 6px',
                 borderRadius: '4px',
                 marginLeft: '4px',
                 fontWeight: 600,
                 border: '1px solid rgba(59, 130, 246, 0.3)'
               }}>
-                {translateUI('statePrefix', currentLang)} {formatViewerState(viewerState, currentLang)}
+                {formatViewerState(viewerState, currentLang)}
               </span>
             )}
 
             {modeTimer && (
               <span style={{
-                fontSize: '10.5px',
+                fontSize: '10px',
                 background: modeTimer.isRunning ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
                 color: modeTimer.isRunning ? '#34D399' : '#FBBF24',
                 border: `1px solid ${modeTimer.isRunning ? 'rgba(16, 185, 129, 0.3)' : 'rgba(245, 158, 11, 0.3)'}`,
-                padding: '2px 7px',
+                padding: '2px 6px',
                 borderRadius: '4px',
                 marginLeft: '4px',
                 fontWeight: 600
@@ -805,24 +842,24 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0, flexWrap: 'nowrap' }}>
           <div style={{
             background: 'rgba(255, 255, 255, 0.04)',
             border: '1px solid rgba(255, 255, 255, 0.08)',
-            padding: '6px 14px',
+            padding: '6px 10px',
             borderRadius: '6px',
-            fontSize: '11.5px',
+            fontSize: '11px',
             color: '#CBD5E1',
             fontWeight: 500,
             display: 'flex',
             alignItems: 'center',
-            gap: '6px'
+            gap: '6px',
+            whiteSpace: 'nowrap',
+            flexShrink: 0
           }}>
             <span>🔔</span>
-            <span className="tv-hud-label">{translateUI('heldInQueueLabel', currentLang)}</span>
-            <strong style={{ color: '#FBBF24', fontSize: '12px', fontWeight: 700 }}>{pendingCount}</strong>
-            <span style={{ color: 'rgba(255, 255, 255, 0.15)' }}>|</span>
-            <span className="tv-hud-label">{translateUI('lastSyncLabel', currentLang)}</span>
+            <strong style={{ color: '#FBBF24', fontSize: '11.5px', fontWeight: 700 }}>{pendingCount}</strong>
+            <span style={{ color: 'rgba(255, 255, 255, 0.2)' }}>|</span>
             <span style={{ color: '#38BDF8', fontWeight: 600 }}>{formatLastSyncEvent(lastSyncEvent, currentLang)}</span>
           </div>
 
@@ -831,91 +868,94 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
             const isVr = (contract?.activityType === 'vr') || (contract?.name?.toLowerCase().includes('vr')) || (contract?.name?.toLowerCase().includes('spatial'));
             const isFocus = !isVr && ((contract?.activityType === 'study') || (contract?.name?.toLowerCase().includes('focus')));
             const isFeature = !isVr && !isFocus;
+            const cleanVoiceCmd = (raw: string) => (raw || '').replace(/^["“”']+|["“”']+$/g, '').replace(/🥽/g, '').trim();
+
             return (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0, flexWrap: 'nowrap' }}>
                 <button
                   type="button"
                   className={`tv-top-action-btn ${isFeature ? 'active' : ''}`}
                   onClick={() => runTvVoiceTypingAnimation('Feature Presentation')}
-                  title="Test Alexa voice search on screen"
+                  title={translateUI('chipInterstellar', currentLang) || "Alexa, play video"}
                   style={{
                     background: isFeature ? '#2563EB' : 'rgba(30, 41, 59, 0.95)',
                     border: isFeature ? '2px solid #93C5FD' : '1px solid rgba(255, 255, 255, 0.22)',
                     color: '#FFFFFF',
-                    padding: '6px 12px',
+                    padding: '5px 10px',
                     borderRadius: '6px',
-                    fontSize: '11.5px',
-                    fontWeight: 700,
+                    fontSize: '11px',
+                    fontWeight: 600,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '5px',
                     boxShadow: isFeature ? '0 0 14px rgba(37, 99, 235, 0.8)' : 'none',
-                    transition: 'all 0.15s ease'
+                    transition: 'none',
+                    flexShrink: 0,
+                    whiteSpace: 'nowrap'
                   }}
                 >
-                  <span>🎬</span>
-                  <span style={{ color: '#FFFFFF' }}>{translateUI('chipInterstellar', currentLang)}</span>
+                  <span style={{ fontSize: '12px' }}>🎬</span>
+                  <span style={{ color: '#FFFFFF' }}>{cleanVoiceCmd(translateUI('chipInterstellar', currentLang))}</span>
                 </button>
                 <button
                   type="button"
                   className={`tv-top-action-btn ${isFocus ? 'active' : ''}`}
                   onClick={() => runTvVoiceTypingAnimation('Focus Terminal')}
-                  title="Test Alexa focus stream command on screen"
+                  title={translateUI('chipMatrix', currentLang) || "Alexa, focus stream"}
                   style={{
                     background: isFocus ? '#10B981' : 'rgba(30, 41, 59, 0.95)',
                     border: isFocus ? '2px solid #34D399' : '1px solid rgba(255, 255, 255, 0.22)',
                     color: '#FFFFFF',
-                    padding: '6px 12px',
+                    padding: '5px 10px',
                     borderRadius: '6px',
-                    fontSize: '11.5px',
-                    fontWeight: 700,
+                    fontSize: '11px',
+                    fontWeight: 600,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '5px',
                     boxShadow: isFocus ? '0 0 14px rgba(16, 185, 129, 0.8)' : 'none',
-                    transition: 'all 0.15s ease'
+                    transition: 'none',
+                    flexShrink: 0,
+                    whiteSpace: 'nowrap'
                   }}
                 >
-                  <span>💻</span>
-                  <span style={{ color: '#FFFFFF' }}>{translateUI('chipMatrix', currentLang)}</span>
+                  <span style={{ fontSize: '12px' }}>💻</span>
+                  <span style={{ color: '#FFFFFF' }}>{cleanVoiceCmd(translateUI('chipMatrix', currentLang))}</span>
                 </button>
                 <button
                   type="button"
                   className={`tv-top-action-btn ${isVr ? 'active' : ''}`}
                   onClick={() => runTvVoiceTypingAnimation('VR Spatial Immersion')}
-                  title="Test Alexa VR spatial command on screen"
+                  title={translateUI('chipVrStream', currentLang) || "Alexa, VR stream 🥽"}
                   style={{
                     background: isVr ? '#0284C7' : 'rgba(30, 41, 59, 0.95)',
                     border: isVr ? '2px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.22)',
                     color: '#FFFFFF',
-                    padding: '6px 12px',
+                    padding: '5px 10px',
                     borderRadius: '6px',
-                    fontSize: '11.5px',
-                    fontWeight: 700,
+                    fontSize: '11px',
+                    fontWeight: 600,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '5px',
                     boxShadow: isVr ? '0 0 16px rgba(56, 189, 248, 0.9)' : 'none',
-                    transition: 'all 0.15s ease'
+                    transition: 'none',
+                    flexShrink: 0,
+                    whiteSpace: 'nowrap'
                   }}
                 >
-                  <span>🥽</span>
-                  <span style={{ color: '#FFFFFF' }}>{translateUI('chipVrStream', currentLang)}</span>
-                  {isVr && (
-                    <span style={{ fontSize: '9px', background: '#38BDF8', color: '#0F172A', fontWeight: 800, padding: '1px 5px', borderRadius: '3px', marginLeft: '4px' }}>
-                      ACTIVE
-                    </span>
-                  )}
+                  <span style={{ fontSize: '12px' }}>🥽</span>
+                  <span style={{ color: '#FFFFFF' }}>{cleanVoiceCmd(translateUI('chipVrStream', currentLang))}</span>
                 </button>
               </div>
             );
           })()}
 
           {/* Online Language Dropdown for Fire TV */}
-          <div ref={langDropdownRef} style={{ position: 'relative', zIndex: 1000 }}>
+          <div ref={langDropdownRef} style={{ position: 'relative', zIndex: 1000, flexShrink: 0 }}>
             <button
               type="button"
               className="tv-lang-trigger-btn"
@@ -937,15 +977,26 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
                 fontWeight: 700,
                 cursor: 'pointer',
                 boxShadow: 'none',
-                transition: 'all 0.15s ease',
-                backdropFilter: 'blur(10px)'
+                transition: 'none',
+                backdropFilter: 'blur(10px)',
+                width: '115px',
+                minWidth: '115px',
+                maxWidth: '115px',
+                justifyContent: 'space-between',
+                whiteSpace: 'nowrap',
+                boxSizing: 'border-box',
+                flexShrink: 0
               }}
             >
-              <span style={{ fontSize: '10px', background: 'rgba(255, 255, 255, 0.15)', color: '#FFFFFF', padding: '2px 5px', borderRadius: '4px', fontWeight: 800 }}>
-                {SUPPORTED_LANGUAGES.find(l => l.code === currentLang)?.flag || currentLang.toUpperCase()}
-              </span>
-              <span style={{ fontSize: '12px', color: '#FFFFFF', letterSpacing: '0.02em', fontWeight: 600 }}>{SUPPORTED_LANGUAGES.find(l => l.code === currentLang)?.label || 'Language'}</span>
-              <span style={{ fontSize: '9px', color: '#38BDF8', marginLeft: '2px' }}>{isLangDropdownOpen ? '▴' : '▾'}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflow: 'hidden' }}>
+                <span style={{ fontSize: '10px', background: 'rgba(255, 255, 255, 0.15)', color: '#FFFFFF', padding: '2px 5px', borderRadius: '4px', fontWeight: 800, flexShrink: 0 }}>
+                  {SUPPORTED_LANGUAGES.find(l => l.code === currentLang)?.flag || currentLang.toUpperCase()}
+                </span>
+                <span style={{ fontSize: '12px', color: '#FFFFFF', letterSpacing: '0.02em', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {SUPPORTED_LANGUAGES.find(l => l.code === currentLang)?.label || 'Language'}
+                </span>
+              </div>
+              <span style={{ fontSize: '9px', color: '#38BDF8', marginLeft: '4px', flexShrink: 0 }}>{isLangDropdownOpen ? '▴' : '▾'}</span>
             </button>
 
             {isLangDropdownOpen && (
@@ -953,19 +1004,20 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
                 onClick={(e) => e.stopPropagation()}
                 style={{
                   position: 'absolute',
-                  top: 'calc(100% + 8px)',
+                  top: 'calc(100% + 6px)',
                   right: 0,
                   background: 'rgba(15, 23, 42, 0.98)',
                   border: '1px solid rgba(56, 189, 248, 0.35)',
                   borderRadius: '12px',
                   padding: '6px',
-                  minWidth: '160px',
+                  width: '160px',
                   boxShadow: '0 12px 32px rgba(0, 0, 0, 0.85), 0 0 16px rgba(56, 189, 248, 0.2)',
                   backdropFilter: 'blur(16px)',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '4px',
-                  zIndex: 2000
+                  zIndex: 2000,
+                  boxSizing: 'border-box'
                 }}
               >
                 {SUPPORTED_LANGUAGES.map((lang) => (
@@ -992,11 +1044,13 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
                       fontWeight: 600,
                       cursor: 'pointer',
                       textAlign: 'left',
-                      transition: 'all 0.15s ease'
+                      transition: 'none',
+                      whiteSpace: 'nowrap',
+                      boxSizing: 'border-box'
                     }}
                   >
                     <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '13px' }}>{lang.flag}</span>
+                      <span style={{ fontSize: '12px', fontWeight: 700 }}>{lang.flag}</span>
                       <span style={{ color: currentLang === lang.code ? '#38BDF8' : '#FFFFFF', fontWeight: 600 }}>{lang.label}</span>
                     </span>
                     {currentLang === lang.code && (
@@ -1013,22 +1067,26 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
               type="button"
               className="tv-dashboard-exit-btn"
               onClick={onExitTvMode}
+              title="Return to QuietCue+ Dashboard"
               style={{
-                background: 'rgba(15, 23, 42, 0.95)',
-                border: '1px solid rgba(56, 189, 248, 0.6)',
+                background: 'rgba(2, 132, 199, 0.25)',
+                border: '1px solid #38BDF8',
                 color: '#38BDF8',
-                padding: '6px 14px',
+                padding: '6px 12px',
                 borderRadius: '6px',
                 fontSize: '12px',
                 fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                boxShadow: 'none',
-                backdropFilter: 'blur(10px)'
+                gap: '5px',
+                boxShadow: '0 0 10px rgba(56, 189, 248, 0.25)',
+                backdropFilter: 'blur(10px)',
+                flexShrink: 0,
+                whiteSpace: 'nowrap'
               }}
             >
+              <span>←</span>
               <span style={{ color: '#38BDF8', fontWeight: 700 }}>{translateUI('dashboard', currentLang)}</span>
             </button>
           )}

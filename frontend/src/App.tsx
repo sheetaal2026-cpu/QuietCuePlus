@@ -174,6 +174,7 @@ function App() {
   });
 
   const handleSelectLanguage = async (lang: SupportedLanguage) => {
+    if (lang === currentLang) return;
     setCurrentLang(lang);
     localStorage.setItem('quietcue_lang', lang);
     try {
@@ -1715,7 +1716,9 @@ function App() {
                 boxShadow: theme === 'light' ? '0 1px 2px rgba(15, 23, 42, 0.05)' : 'none'
               }}
             >
-              <span className="lang-code-pill">US</span>
+              <span className="lang-code-pill">
+                {SUPPORTED_LANGUAGES.find(l => l.code === currentLang)?.flag || currentLang.toUpperCase()}
+              </span>
               <span className="lang-trigger-label" style={{ color: theme === 'light' ? '#0F172A' : '#F8FAFC' }}>{SUPPORTED_LANGUAGES.find(l => l.code === currentLang)?.label || 'English'}</span>
               <span className="lang-trigger-chevron" style={{ color: '#0284C7' }}>{isLangDropdownOpen ? '▴' : '▾'}</span>
             </button>

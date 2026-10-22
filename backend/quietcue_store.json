@@ -2,12 +2,12 @@
   "contracts": {
     "contract-focus-mode": {
       "contractId": "contract-focus-mode",
-      "name": "VR Immersion",
-      "activityType": "vr",
+      "name": "Feature Night",
+      "activityType": "movie",
       "status": "active",
-      "createdAt": "2026-10-22T04:33:44.994Z",
-      "updatedAt": "2026-10-22T09:48:01.614Z",
-      "sessionStartTime": "2026-10-22T04:33:44.994Z",
+      "createdAt": "2026-10-22T14:18:15.089Z",
+      "updatedAt": "2026-10-22T14:35:22.717Z",
+      "sessionStartTime": "2026-10-22T14:18:15.089Z",
       "breakConfiguration": {
         "allowMidBreaks": true,
         "releaseOnCredits": true
@@ -19,36 +19,36 @@
           "handlingPolicy": "interrupt_now",
           "priority": 1,
           "userDefined": true,
-          "updatedAt": "2026-10-22T09:48:01.614Z"
+          "updatedAt": "2026-10-22T14:18:15.089Z"
         },
         {
           "eventCategory": "package",
-          "handlingPolicy": "next_break",
+          "handlingPolicy": "interrupt_now",
           "displayCondition": "credits",
           "priority": 2,
           "userDefined": true,
-          "updatedAt": "2026-10-22T04:33:44.995Z"
+          "updatedAt": "2026-10-22T14:35:22.717Z"
         },
         {
           "eventCategory": "thermostat",
           "handlingPolicy": "summarize_later",
           "priority": 3,
           "userDefined": false,
-          "updatedAt": "2026-10-22T04:33:44.995Z"
+          "updatedAt": "2026-10-22T14:18:15.089Z"
         },
         {
           "eventCategory": "light",
           "handlingPolicy": "summarize_later",
           "priority": 4,
           "userDefined": false,
-          "updatedAt": "2026-10-22T04:33:44.995Z"
+          "updatedAt": "2026-10-22T14:18:15.089Z"
         },
         {
           "eventCategory": "device_unavailable",
           "handlingPolicy": "next_break",
           "priority": 5,
           "userDefined": false,
-          "updatedAt": "2026-10-22T04:33:44.995Z"
+          "updatedAt": "2026-10-22T14:18:15.089Z"
         },
         {
           "eventCategory": "health",
@@ -56,7 +56,7 @@
           "displayCondition": "pause",
           "priority": 2,
           "userDefined": true,
-          "updatedAt": "2026-10-22T04:33:44.995Z"
+          "updatedAt": "2026-10-22T14:18:15.089Z"
         },
         {
           "eventCategory": "calendar",
@@ -64,174 +64,20 @@
           "displayCondition": "pause",
           "priority": 3,
           "userDefined": true,
-          "updatedAt": "2026-10-22T04:33:44.995Z"
+          "updatedAt": "2026-10-22T14:18:15.089Z"
         }
       ],
       "notificationSummary": {
-        "totalEvents": 8,
-        "displayedCount": 7,
+        "totalEvents": 0,
+        "displayedCount": 0,
         "queuedCount": 0,
-        "summarizedCount": 1,
+        "summarizedCount": 0,
         "dismissedCount": 0
-      },
-      "sessionEndTime": "2026-10-22T10:08:45.106Z"
+      }
     }
   },
   "activeContractId": "contract-focus-mode",
-  "notifications": [
-    {
-      "id": "evt-1792662601758",
-      "contractId": "contract-focus-mode",
-      "event": {
-        "id": "evt-1792662601758",
-        "category": "health",
-        "title": "Hydration & Posture Cue",
-        "message": "Time for 250ml water and shoulder rolls.",
-        "sourceDevice": "Health Tracker",
-        "timestamp": "03:20 pm",
-        "simulated": true
-      },
-      "appliedRule": "next_break",
-      "priority": 2,
-      "status": "displayed",
-      "explanation": "Delivered during viewing break • 1 beep",
-      "handledAt": "03:38 pm",
-      "soundPlayed": "normal"
-    },
-    {
-      "id": "evt-1792662542727",
-      "contractId": "contract-focus-mode",
-      "event": {
-        "id": "evt-1792662542727",
-        "category": "calendar",
-        "title": "Mom's Birthday Reminder",
-        "message": "Today is Mom's birthday! Wish them a wonderful celebration.",
-        "sourceDevice": "Alexa Family Calendar",
-        "timestamp": "03:19 pm",
-        "simulated": true
-      },
-      "appliedRule": "next_break",
-      "priority": 3,
-      "status": "displayed",
-      "explanation": "Delivered during viewing break • 1 beep",
-      "handledAt": "03:38 pm",
-      "soundPlayed": "normal"
-    },
-    {
-      "id": "evt-timer-1792661240160",
-      "contractId": "contract-focus-mode",
-      "event": {
-        "id": "evt-timer-1792661240160",
-        "title": "Family Time Timer Complete",
-        "message": "Your 21-minute Family Time timer has finished. Switched to viewing break ☕.",
-        "sourceDevice": "QuietCue+ Mode Timer",
-        "category": "timer",
-        "timestamp": "02:57 pm",
-        "simulated": true
-      },
-      "appliedRule": "interrupt_now",
-      "priority": 1,
-      "status": "displayed",
-      "explanation": "Displayed immediately on screen • 2 beeps",
-      "handledAt": "02:57 pm",
-      "soundPlayed": "critical"
-    },
-    {
-      "id": "evt-1792660034229",
-      "contractId": "contract-focus-mode",
-      "event": {
-        "id": "evt-1792660034229",
-        "category": "thermostat",
-        "title": "Thermostat Update",
-        "message": "Target temperature reached: 72°F.",
-        "sourceDevice": "Thermostat",
-        "timestamp": "02:37 pm",
-        "simulated": true
-      },
-      "appliedRule": "summarize_later",
-      "priority": 3,
-      "status": "summarized",
-      "explanation": "Included in session digest • Silent",
-      "handledAt": "02:37 pm",
-      "soundPlayed": "none"
-    },
-    {
-      "id": "evt-1792660033366",
-      "contractId": "contract-focus-mode",
-      "event": {
-        "id": "evt-1792660033366",
-        "category": "health",
-        "title": "Hydration Routine",
-        "message": "Drink 250ml water to stay refreshed.",
-        "sourceDevice": "Health Monitor",
-        "timestamp": "02:37 pm",
-        "simulated": true
-      },
-      "appliedRule": "next_break",
-      "priority": 2,
-      "status": "displayed",
-      "explanation": "Delivered during viewing break • 1 beep",
-      "handledAt": "02:57 pm",
-      "soundPlayed": "normal"
-    },
-    {
-      "id": "evt-1792660032492",
-      "contractId": "contract-focus-mode",
-      "event": {
-        "id": "evt-1792660032492",
-        "category": "calendar",
-        "title": "Dad's Day Reminder",
-        "message": "Today is Dad's Day! Send warm greetings.",
-        "sourceDevice": "Alexa Calendar",
-        "timestamp": "02:37 pm",
-        "simulated": true
-      },
-      "appliedRule": "next_break",
-      "priority": 3,
-      "status": "displayed",
-      "explanation": "Delivered during viewing break • 1 beep",
-      "handledAt": "02:57 pm",
-      "soundPlayed": "normal"
-    },
-    {
-      "id": "evt-1792660031633",
-      "contractId": "contract-focus-mode",
-      "event": {
-        "id": "evt-1792660031633",
-        "category": "package",
-        "title": "Package Delivered",
-        "message": "Amazon Prime package delivered safely.",
-        "sourceDevice": "Parcel Delivery",
-        "timestamp": "02:37 pm",
-        "simulated": true
-      },
-      "appliedRule": "next_break",
-      "priority": 2,
-      "status": "displayed",
-      "explanation": "Delivered during viewing break • 1 beep",
-      "handledAt": "02:57 pm",
-      "soundPlayed": "normal"
-    },
-    {
-      "id": "evt-1792660030723",
-      "contractId": "contract-focus-mode",
-      "event": {
-        "id": "evt-1792660030723",
-        "category": "security",
-        "title": "Critical Alert - Doorbell",
-        "message": "Front entrance camera detected urgent visitor.",
-        "sourceDevice": "Front Door Ring",
-        "timestamp": "02:37 pm",
-        "simulated": true
-      },
-      "appliedRule": "interrupt_now",
-      "priority": 1,
-      "status": "displayed",
-      "explanation": "Displayed immediately on screen • 2 beeps",
-      "handledAt": "02:37 pm",
-      "soundPlayed": "critical"
-    }
-  ],
+  "notifications": [],
   "soundPreferences": {
     "volume": 0.7,
     "criticalSound": true,
