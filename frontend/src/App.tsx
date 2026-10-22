@@ -6,7 +6,6 @@ import { TvClient } from './TvClient.js';
 import { getMediaForMode, getMediaForMovieSearch } from './mediaConfig.js';
 import { SUPPORTED_LANGUAGES, SupportedLanguage, translateUI, formatContractName } from './translations.js';
 import { VoiceTypingOverlay } from './VoiceTypingOverlay.js';
-import { DemoWalkthroughModal } from './DemoWalkthroughModal.js';
 import './App.css';
 
 interface ViewingRule {
@@ -591,7 +590,6 @@ function App() {
     return (localStorage.getItem('quietcue_theme') as 'slate' | 'warm' | 'light') || 'slate';
   });
 
-  const [showDemoModal, setShowDemoModal] = useState<boolean>(false);
   const [isSimulatingAll, setIsSimulatingAll] = useState<boolean>(false);
   const [lastTriggeredEvent, setLastTriggeredEvent] = useState<{ id: string; name: string; policy: string; time: string } | null>(null);
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
@@ -1636,25 +1634,6 @@ function App() {
             <span style={{ color: theme === 'light' ? '#0F172A' : '#F8FAFC' }}>{formatContractName(contract.name, currentLang, contract.activityType)}</span>
             <span className="badge-dot"></span>
           </div>
-          
-          {/* Interactive Demo Video Walkthrough Trigger */}
-          <button
-            type="button"
-            className="demo-walkthrough-pill"
-            onClick={() => setShowDemoModal(true)}
-            title="Launch interactive submission walkthrough with VR Immersion"
-            style={{
-              backgroundColor: theme === 'light' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.05)',
-              borderColor: theme === 'light' ? '#CBD5E1' : 'rgba(255, 255, 255, 0.12)',
-              color: theme === 'light' ? '#0F172A' : '#F8FAFC',
-              fontWeight: 700,
-              borderRadius: '6px',
-              boxShadow: theme === 'light' ? '0 1px 2px rgba(15, 23, 42, 0.05)' : 'none'
-            }}
-          >
-            <span style={{ color: '#EA580C', fontSize: '14px' }}>📅</span>
-            <span style={{ color: theme === 'light' ? '#0F172A' : '#F8FAFC' }}>Demo Walkthrough</span>
-          </button>
 
           {/* Eye-friendly Visual Theme Switcher */}
           <div className="theme-toggle-strip" title="Visual Comfort Theme" style={{
@@ -3903,13 +3882,6 @@ function App() {
           </div>
         </div>
       )}
-
-      {/* Interactive Demo Video Walkthrough Modal */}
-      <DemoWalkthroughModal
-        isOpen={showDemoModal}
-        onClose={() => setShowDemoModal(false)}
-        onNavigateToTv={() => setIsTvClientView(true)}
-      />
 
     </div>
   );
