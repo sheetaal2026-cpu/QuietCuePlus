@@ -328,28 +328,22 @@ function App() {
     showToast('Timer Active ⏱️', `Started ${minutes}-minute timer for ${modeName}.`, '⏱️', 'success');
   };
 
-  const handlePauseModeTimer = async () => {
-    try {
-      await fetch('http://localhost:3001/api/action/pause-mode-timer', { method: 'POST' });
-    } catch {}
+  const handlePauseModeTimer = () => {
     setModeTimer(prev => prev ? ({ ...prev, isRunning: false }) : null);
     showToast('Timer Paused', 'Mode countdown paused.', '⏸', 'info');
+    fetch('http://localhost:3001/api/action/pause-mode-timer', { method: 'POST' }).catch(() => {});
   };
 
-  const handleResumeModeTimer = async () => {
-    try {
-      await fetch('http://localhost:3001/api/action/resume-mode-timer', { method: 'POST' });
-    } catch {}
+  const handleResumeModeTimer = () => {
     setModeTimer(prev => prev ? ({ ...prev, isRunning: true }) : null);
     showToast('Timer Resumed', 'Mode countdown resumed.', '▶', 'info');
+    fetch('http://localhost:3001/api/action/resume-mode-timer', { method: 'POST' }).catch(() => {});
   };
 
-  const handleCancelModeTimer = async () => {
-    try {
-      await fetch('http://localhost:3001/api/action/cancel-mode-timer', { method: 'POST' });
-    } catch {}
+  const handleCancelModeTimer = () => {
     setModeTimer(null);
     showToast('Timer Cancelled', 'Mode timer cleared.', '✕', 'info');
+    fetch('http://localhost:3001/api/action/cancel-mode-timer', { method: 'POST' }).catch(() => {});
   };
 
   const formatPlaybackTime = (totalSec: number) => {
@@ -1930,14 +1924,41 @@ function App() {
                       </span>
                       <button 
                         onClick={modeTimer.isRunning ? handlePauseModeTimer : handleResumeModeTimer}
-                        style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: '#CBD5E1', borderRadius: '4px', padding: '2px 5px', fontSize: '10px', cursor: 'pointer' }}
+                        style={{ 
+                          background: 'rgba(255,255,255,0.08)', 
+                          border: '1px solid rgba(255,255,255,0.25)', 
+                          color: '#CBD5E1', 
+                          borderRadius: '6px', 
+                          padding: '3px 8px', 
+                          fontSize: '11px', 
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          minWidth: '24px',
+                          minHeight: '24px'
+                        }}
                         title={modeTimer.isRunning ? 'Pause timer' : 'Resume timer'}
                       >
                         {modeTimer.isRunning ? '⏸' : '▶'}
                       </button>
                       <button 
                         onClick={handleCancelModeTimer}
-                        style={{ background: 'transparent', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#F87171', borderRadius: '4px', padding: '2px 5px', fontSize: '10px', cursor: 'pointer' }}
+                        style={{ 
+                          background: 'rgba(239, 68, 68, 0.15)', 
+                          border: '1px solid rgba(239, 68, 68, 0.5)', 
+                          color: '#F87171', 
+                          borderRadius: '6px', 
+                          padding: '3px 8px', 
+                          fontSize: '12px', 
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          minWidth: '24px',
+                          minHeight: '24px',
+                          fontWeight: 700
+                        }}
                         title="Cancel timer"
                       >
                         ✕
