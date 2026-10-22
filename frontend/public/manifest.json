@@ -1,0 +1,18 @@
+{
+  "name": "QuietCue — AI-Enhanced Viewing & Smart Home Attention Manager",
+  "short_name": "QuietCue TV",
+  "description": "AI-enhanced viewing and multi-modal notification routing for Fire TV (Fire OS / Vega OS) and Alexa+",
+  "start_url": "/?client=tv",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#030712",
+  "theme_color": "#1D4ED8",
+  "categories": ["entertainment", "lifestyle", "utilities"],
+  "icons": [
+    {
+      "src": "/focus_mode_icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

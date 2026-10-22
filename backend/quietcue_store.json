@@ -1,0 +1,279 @@
+{
+  "contracts": {
+    "contract-focus-mode": {
+      "contractId": "contract-focus-mode",
+      "name": "Feature Night",
+      "activityType": "feature",
+      "status": "active",
+      "createdAt": "2026-10-21T18:09:42.750Z",
+      "updatedAt": "2026-10-21T18:22:41.997Z",
+      "sessionStartTime": "2026-10-21T18:09:42.750Z",
+      "breakConfiguration": {
+        "allowMidBreaks": true,
+        "releaseOnCredits": true
+      },
+      "endCondition": "movie_credits_or_manual",
+      "rules": [
+        {
+          "eventCategory": "security",
+          "handlingPolicy": "interrupt_now",
+          "priority": 1,
+          "userDefined": true,
+          "updatedAt": "2026-10-21T18:22:41.997Z"
+        },
+        {
+          "eventCategory": "package",
+          "handlingPolicy": "next_break",
+          "displayCondition": "credits",
+          "priority": 2,
+          "userDefined": true,
+          "updatedAt": "2026-10-21T18:09:42.750Z"
+        },
+        {
+          "eventCategory": "thermostat",
+          "handlingPolicy": "summarize_later",
+          "priority": 3,
+          "userDefined": false,
+          "updatedAt": "2026-10-21T18:09:42.750Z"
+        },
+        {
+          "eventCategory": "light",
+          "handlingPolicy": "summarize_later",
+          "priority": 4,
+          "userDefined": false,
+          "updatedAt": "2026-10-21T18:09:42.750Z"
+        },
+        {
+          "eventCategory": "device_unavailable",
+          "handlingPolicy": "next_break",
+          "priority": 5,
+          "userDefined": false,
+          "updatedAt": "2026-10-21T18:09:42.750Z"
+        },
+        {
+          "eventCategory": "health",
+          "handlingPolicy": "next_break",
+          "displayCondition": "pause",
+          "priority": 2,
+          "userDefined": true,
+          "updatedAt": "2026-10-21T18:09:42.750Z"
+        },
+        {
+          "eventCategory": "calendar",
+          "handlingPolicy": "next_break",
+          "displayCondition": "pause",
+          "priority": 3,
+          "userDefined": true,
+          "updatedAt": "2026-10-21T18:09:42.750Z"
+        }
+      ],
+      "notificationSummary": {
+        "totalEvents": 10,
+        "displayedCount": 7,
+        "queuedCount": 2,
+        "summarizedCount": 1,
+        "dismissedCount": 0
+      }
+    }
+  },
+  "activeContractId": "contract-focus-mode",
+  "notifications": [
+    {
+      "id": "evt-1792608466611",
+      "contractId": "contract-focus-mode",
+      "event": {
+        "id": "evt-1792608466611",
+        "category": "calendar",
+        "title": "Calendar Reminder",
+        "message": "Upcoming calendar event scheduled for today.",
+        "sourceDevice": "Alexa Family Calendar",
+        "timestamp": "12:17 am",
+        "simulated": true
+      },
+      "appliedRule": "next_break",
+      "priority": 3,
+      "status": "pending",
+      "explanation": "Held quietly for next viewing break",
+      "handledAt": "12:17 am",
+      "soundPlayed": "none"
+    },
+    {
+      "id": "evt-1792608457057",
+      "contractId": "contract-focus-mode",
+      "event": {
+        "id": "evt-1792608457057",
+        "category": "calendar",
+        "title": "Calendar Reminder",
+        "message": "Upcoming calendar event scheduled for today.",
+        "sourceDevice": "Alexa Family Calendar",
+        "timestamp": "12:17 am",
+        "simulated": true
+      },
+      "appliedRule": "next_break",
+      "priority": 3,
+      "status": "pending",
+      "explanation": "Held quietly for next viewing break",
+      "handledAt": "12:17 am",
+      "soundPlayed": "none"
+    },
+    {
+      "id": "evt-1792606986051",
+      "contractId": "contract-focus-mode",
+      "event": {
+        "id": "evt-1792606986051",
+        "category": "calendar",
+        "title": "Mom's Birthday Reminder",
+        "message": "Today is Mom's birthday! Wish them a wonderful celebration.",
+        "sourceDevice": "Alexa Family Calendar",
+        "timestamp": "11:53 pm",
+        "simulated": true
+      },
+      "appliedRule": "next_break",
+      "priority": 3,
+      "status": "displayed",
+      "explanation": "Delivered during viewing break • 1 beep",
+      "handledAt": "11:54 pm",
+      "soundPlayed": "normal"
+    },
+    {
+      "id": "evt-1792606975030",
+      "contractId": "contract-focus-mode",
+      "event": {
+        "id": "evt-1792606975030",
+        "category": "thermostat",
+        "title": "Thermostat Update",
+        "message": "Target temperature reached: 72°F.",
+        "sourceDevice": "Thermostat",
+        "timestamp": "11:52 pm",
+        "simulated": true
+      },
+      "appliedRule": "summarize_later",
+      "priority": 3,
+      "status": "summarized",
+      "explanation": "Included in session digest • Silent",
+      "handledAt": "11:52 pm",
+      "soundPlayed": "none"
+    },
+    {
+      "id": "evt-1792606974157",
+      "contractId": "contract-focus-mode",
+      "event": {
+        "id": "evt-1792606974157",
+        "category": "health",
+        "title": "Hydration Routine",
+        "message": "Drink 250ml water to stay refreshed.",
+        "sourceDevice": "Health Monitor",
+        "timestamp": "11:52 pm",
+        "simulated": true
+      },
+      "appliedRule": "next_break",
+      "priority": 2,
+      "status": "displayed",
+      "explanation": "Delivered during viewing break • 1 beep",
+      "handledAt": "11:54 pm",
+      "soundPlayed": "normal"
+    },
+    {
+      "id": "evt-1792606973288",
+      "contractId": "contract-focus-mode",
+      "event": {
+        "id": "evt-1792606973288",
+        "category": "calendar",
+        "title": "Dad's Day Reminder",
+        "message": "Today is Dad's Day! Send warm greetings.",
+        "sourceDevice": "Alexa Calendar",
+        "timestamp": "11:52 pm",
+        "simulated": true
+      },
+      "appliedRule": "next_break",
+      "priority": 3,
+      "status": "displayed",
+      "explanation": "Delivered during viewing break • 1 beep",
+      "handledAt": "11:54 pm",
+      "soundPlayed": "normal"
+    },
+    {
+      "id": "evt-1792606972417",
+      "contractId": "contract-focus-mode",
+      "event": {
+        "id": "evt-1792606972417",
+        "category": "package",
+        "title": "Package Delivered",
+        "message": "Amazon Prime package delivered safely.",
+        "sourceDevice": "Parcel Delivery",
+        "timestamp": "11:52 pm",
+        "simulated": true
+      },
+      "appliedRule": "next_break",
+      "priority": 2,
+      "status": "displayed",
+      "explanation": "Delivered during viewing break • 1 beep",
+      "handledAt": "11:54 pm",
+      "soundPlayed": "normal"
+    },
+    {
+      "id": "evt-1792606971469",
+      "contractId": "contract-focus-mode",
+      "event": {
+        "id": "evt-1792606971469",
+        "category": "security",
+        "title": "Critical Alert - Doorbell",
+        "message": "Front entrance camera detected urgent visitor.",
+        "sourceDevice": "Front Door Ring",
+        "timestamp": "11:52 pm",
+        "simulated": true
+      },
+      "appliedRule": "interrupt_now",
+      "priority": 1,
+      "status": "displayed",
+      "explanation": "Displayed immediately on screen • 2 beeps",
+      "handledAt": "11:52 pm",
+      "soundPlayed": "critical"
+    },
+    {
+      "id": "evt-1792606316591",
+      "contractId": "contract-focus-mode",
+      "event": {
+        "id": "evt-1792606316591",
+        "category": "calendar",
+        "title": "Calendar Reminder",
+        "message": "Upcoming calendar event scheduled for today.",
+        "sourceDevice": "Alexa Family Calendar",
+        "timestamp": "11:41 pm",
+        "simulated": true
+      },
+      "appliedRule": "next_break",
+      "priority": 3,
+      "status": "displayed",
+      "explanation": "Delivered during viewing break • 1 beep",
+      "handledAt": "11:54 pm",
+      "soundPlayed": "normal"
+    },
+    {
+      "id": "evt-1792606194028",
+      "contractId": "contract-focus-mode",
+      "event": {
+        "id": "evt-1792606194028",
+        "category": "calendar",
+        "title": "Calendar Reminder",
+        "message": "Upcoming calendar event scheduled for today.",
+        "sourceDevice": "Alexa Family Calendar",
+        "timestamp": "11:39 pm",
+        "simulated": true
+      },
+      "appliedRule": "next_break",
+      "priority": 3,
+      "status": "displayed",
+      "explanation": "Delivered during viewing break • 1 beep",
+      "handledAt": "11:54 pm",
+      "soundPlayed": "normal"
+    }
+  ],
+  "soundPreferences": {
+    "volume": 0.7,
+    "criticalSound": true,
+    "normalSound": true,
+    "routineSound": false,
+    "quietMode": true
+  }
+}

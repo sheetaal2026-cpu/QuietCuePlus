@@ -1,0 +1,13 @@
+Smart homes are filled with helpful devices, but notifications remain strictly binary. You either experience constant interruptions from doorbells, sensors, and deliveries, or you enable do-not-disturb and risk missing a genuine emergency. To solve this, I created QuietCue+: an intelligent attention shield for Alexa+ and Fire TV that knows when to speak and when to wait.
+
+What makes QuietCue+ fundamentally different is intent-driven smart contracts. Instead of clicking through complex settings menus, I simply speak: "Alexa, start Family Time: prioritize critical safety alerts, hold deliveries, and queue routine sensor pings." Amazon Bedrock immediately compiles that single sentence into a three-tier smart contract on the fly, establishing clear priority rules with zero manual configuration.
+
+On the Fire TV Client, QuietCue+ replaces intrusive screen takeovers with two distinct visual tiers. Critical perimeter alarms trigger a high-priority red HUD along the top edge, immediately visible without blocking the screen. Meanwhile, standard front door deliveries glide in as a quiet whisper cue along the lower border, so you stay informed without breaking your focus.
+
+Another breakthrough is spatial living room safety. When someone puts on a virtual reality headset, Fire TV becomes an external guardian anchor. Using the Model Context Protocol TypeScript SDK over HTTP, QuietCue+ renders an active cyan guardian boundary grid. Urgent alerts break through into spatial vision, while routine chatter stays outside, keeping physical movement safe.
+
+For everyday ease, I integrated real-time voice typing directly into the television search bar, streaming characters live as I speak. When I need dedicated quiet time, I can activate fifteen, twenty-five, or fifty-minute focus sprint blocks with one-click on-screen controls.
+
+QuietCue+ provides dynamic runtime translation across multiple languages directly from the navigation bar. To reduce visual fatigue, I designed three dedicated interface palettes: Dark Cedar, Warm Dusk, and Clean Daylight, optimized specifically for comfortable living room screen distances.
+
+This working application is open-sourced under the MIT license as my solo project, powered by Amazon Bedrock, Fire TV, and the official MCP TypeScript SDK. My feedback for the Amazon developer team: reducing JSON schema compilation latency on Bedrock streaming endpoints will make live smart contract synthesis even faster. QuietCue+ proves our smart displays can be truly context-aware.

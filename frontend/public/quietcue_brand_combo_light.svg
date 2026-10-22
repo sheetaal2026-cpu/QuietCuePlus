@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" fill="none">
+  <defs>
+    <linearGradient id="qcTvCyanLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284C7" />
+      <stop offset="50%" stop-color="#0369A1" />
+      <stop offset="100%" stop-color="#075985" />
+    </linearGradient>
+    <linearGradient id="qcFireGradLight" x1="0%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" stop-color="#DC2626" />
+      <stop offset="30%" stop-color="#EA580C" />
+      <stop offset="65%" stop-color="#F97316" />
+      <stop offset="100%" stop-color="#FBBF24" />
+    </linearGradient>
+  </defs>
+
+  <!-- ELEMENT 1: TV SCREEN - CONCENTRIC SOUNDWAVES - FIRE TV FLAME -->
+  <g transform="translate(2, 2)">
+    <!-- TV Screen Frame -->
+    <rect x="6" y="10" width="58" height="40" rx="8" fill="#0284C7" fill-opacity="0.06" stroke="url(#qcTvCyanLight)" stroke-width="3.2" />
+    
+    <!-- TV Stand Base -->
+    <path d="M23 54 L47 54 M35 50 L35 54" stroke="url(#qcTvCyanLight)" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Concentric Soundwaves inside TV Display -->
+    <path d="M 21 22 A 13 13 0 0 0 21 38" stroke="#0284C7" stroke-width="2.6" stroke-linecap="round" fill="none" />
+    <path d="M 26 25 A 8 8 0 0 0 26 35" stroke="#0284C7" stroke-width="2.6" stroke-linecap="round" fill="none" />
+    
+    <!-- Plus Sign -->
+    <line x1="35" y1="24" x2="35" y2="36" stroke="#0284C7" stroke-width="3.2" stroke-linecap="round" />
+    <line x1="29" y1="30" x2="41" y2="30" stroke="#0284C7" stroke-width="3.2" stroke-linecap="round" />
+
+    <path d="M 44 25 A 8 8 0 0 1 44 35" stroke="#0284C7" stroke-width="2.6" stroke-linecap="round" fill="none" />
+    <path d="M 49 22 A 13 13 0 0 1 49 38" stroke="#0284C7" stroke-width="2.6" stroke-linecap="round" fill="none" />
+
+    <!-- Top-Right Fire TV Flame -->
+    <path d="M53 20 C51 13, 54 8, 59 3 C61 8, 66 9, 66 13 C68 10, 67 6, 64 4 C69 6, 74 11, 72 17 C70 22, 62 24, 58 23 C55 22, 53 21, 53 20 Z" fill="url(#qcFireGradLight)" />
+    <path d="M57 18 C56 14, 58 11, 60 8 C61 11, 64 12, 64 14 C63 17, 59 18, 57 18 Z" fill="#FEF08A" opacity="0.9" />
+  </g>
+
+  <!-- ELEMENT 2: PROMINENT ENLARGED ALEXA+ | FIRE TV COMBO -->
+  <g transform="translate(90, 0)">
+    <!-- alexa+ text in deep dark slate #0F172A for high contrast daylight mode -->
+    <text x="0" y="39" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif" font-size="33" font-weight="700" fill="#0F172A" letter-spacing="-0.5px">alexa<tspan fill="#0284C7">+</tspan></text>
+    
+    <!-- Divider Bar -->
+    <line x1="110" y1="14" x2="110" y2="46" stroke="#0284C7" stroke-width="2.4" stroke-linecap="round" opacity="0.8" />
+
+    <!-- fire tv in vivid deep ocean cyan #0284C7 for clear daylight reading -->
+    <text x="124" y="39" font-family="'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif" font-size="33" font-weight="700" fill="#0284C7" letter-spacing="-0.5px">fire tv</text>
+
+    <!-- Amazon Smile Curve extending under alexa+ through to fire tv -->
+    <path d="M 6 49 Q 106 61 206 49" stroke="#0284C7" stroke-width="2.8" stroke-linecap="round" fill="none" />
+    <path d="M 200 44 L 208 49 L 201 53" fill="#0284C7" stroke="#0284C7" stroke-width="1.2" stroke-linejoin="round" />
+  </g>
+</svg>
