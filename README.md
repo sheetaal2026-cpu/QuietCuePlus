@@ -64,12 +64,15 @@ QuietCue+ is an intelligent attention guardian engineered for Fire TV and Alexa+
        v
 +-----------------------------------------------------------+
 |               Fire TV & Companion Displays                |
-|  - Fire TV Fullscreen Client [Port 5173/?client=tv]       |
+|  - Fire TV Client Simulation [Port 5173/?client=tv]       |
 |  - Companion Command Console [Port 5173]                  |
 |  - Subtitle-Slot Whisper Alerts & Critical HUD Banners     |
 |  - Three Immersion Themes: Slate, Warm Dusk, Daylight     |
 +-----------------------------------------------------------+
 ```
+
+> **Fire TV Client Simulation**:
+> The Fire TV interface running at `http://localhost:5173/?client=tv` is a high-fidelity interactive simulation of the Fire TV television display environment. It allows full evaluation of attention contracts, directional remote controls, and subtitle-slot alerts inside any modern web browser without requiring physical television hardware.
 
 ---
 
@@ -95,7 +98,7 @@ npm start
 ```
 - Express Backend & MCP Server: `http://localhost:3001`
 - Frontend Command Console: `http://localhost:5173`
-- Fire TV Dedicated Client: `http://localhost:5173/?client=tv`
+- Fire TV Interactive Client Simulation: `http://localhost:5173/?client=tv`
 
 ---
 
