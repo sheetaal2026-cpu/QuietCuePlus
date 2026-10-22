@@ -205,6 +205,21 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
       typingTimerRef.current = null;
     }
 
+    const mediaMatch = getMediaForMovieSearch(movie);
+    const updated = {
+      ...contract,
+      name: mediaMatch.matchedMode.name,
+      activityType: mediaMatch.matchedMode.activityType,
+      status: 'active'
+    };
+    setContract(updated);
+    setViewerState('Watching');
+    fetch('http://localhost:3001/api/action/save-contract', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contract: updated })
+    }).catch(() => {});
+
     await soundManager.init();
     await soundManager.playAlexaChime();
     soundManager.speakAlexa(`Playing ${movie} on Fire TV.`);
@@ -230,18 +245,13 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
         clearInterval(typingTimerRef.current);
         typingTimerRef.current = null;
 
-        const mediaMatch = getMediaForMovieSearch(movie);
         setVoiceTypingState(prev => ({
           ...prev,
           isMatched: true,
           statusText: `Matched: ${mediaMatch.title}`
         }));
 
-        setContract((prev: any) => ({
-          ...prev,
-          name: mediaMatch.matchedMode.name,
-          activityType: mediaMatch.matchedMode.activityType
-        }));
+        setContract(updated);
         setViewerState('Watching');
         videoRef.current?.play().catch(() => {});
 
@@ -520,36 +530,60 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
   };
 
   // Remote buttons for D-Pad navigation
+  const isVrMode = (contract?.activityType === 'vr') || (contract?.name?.toLowerCase().includes('vr')) || (contract?.name?.toLowerCase().includes('spatial'));
+  const isSportsMode = (contract?.activityType === 'sports') || (contract?.name?.toLowerCase().includes('sport'));
+  const isFamilyMode = (contract?.activityType === 'family') || (contract?.name?.toLowerCase().includes('family'));
+  const isFeatureMode = !isVrMode && !isSportsMode && !isFamilyMode && ((contract?.activityType === 'feature') || (contract?.activityType === 'movie') || (contract?.name?.toLowerCase().includes('feature')));
+
   const remoteActions = [
     {
+      id: 'playback',
       label: viewerState === 'Watching' ? `⏸ ${translateUI('pauseMovie', currentLang)}` : `▶ ${translateUI('resumeMovie', currentLang)}`,
-      action: () => sendViewerState(viewerState === 'Watching' ? 'Paused' : 'Watching')
+      action: () => sendViewerState(viewerState === 'Watching' ? 'Paused' : 'Watching'),
+      isActive: false
     },
     {
+      id: 'break',
       label: `☕ ${translateUI('viewingBreak', currentLang)}`,
-      action: () => sendViewerState('Break')
+      action: () => sendViewerState('Break'),
+      isActive: viewerState === 'Break'
     },
     {
+      id: 'summary',
       label: `📊 ${translateUI('sessionDigest', currentLang)}`,
-      action: () => sendViewerState('Summary')
+      action: () => sendViewerState('Summary'),
+      isActive: viewerState === 'Summary'
     },
     {
+      id: 'mode_feature',
+      modeType: 'feature',
       label: `🎬 ${translateUI('movieNight', currentLang) || 'Feature Night'}`,
-      action: () => switchTvModeTemplate('Feature Night', 'feature')
+      action: () => switchTvModeTemplate('Feature Night', 'feature'),
+      isActive: isFeatureMode && viewerState === 'Watching'
     },
     {
+      id: 'mode_sports',
+      modeType: 'sports',
       label: `⚽ ${translateUI('sportsLive', currentLang)}`,
-      action: () => switchTvModeTemplate('Sports Live', 'sports')
+      action: () => switchTvModeTemplate('Sports Live', 'sports'),
+      isActive: isSportsMode && viewerState === 'Watching'
     },
     {
+      id: 'mode_family',
+      modeType: 'family',
       label: `👨‍👩‍👧 ${translateUI('familyTime', currentLang)}`,
-      action: () => switchTvModeTemplate('Family Time', 'family')
+      action: () => switchTvModeTemplate('Family Time', 'family'),
+      isActive: isFamilyMode && viewerState === 'Watching'
     },
     {
+      id: 'mode_vr',
+      modeType: 'vr',
       label: `🥽 ${translateUI('tmplVrImmersionTitle', currentLang)}`,
-      action: () => switchTvModeTemplate('VR Immersion', 'vr')
+      action: () => switchTvModeTemplate('VR Immersion', 'vr'),
+      isActive: isVrMode && viewerState === 'Watching'
     },
     {
+      id: 'timer_25m',
       label: '⏱️ 25m Timer',
       action: async () => {
         try {
@@ -563,7 +597,8 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
             category: 'timer'
           });
         } catch {}
-      }
+      },
+      isActive: false
     }
   ];
 
@@ -724,18 +759,34 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
             <span style={{ color: '#10B981', fontWeight: 800, fontSize: '13px' }}>✓</span>
             <span className="tv-hud-label" style={{ fontSize: '12px', color: '#CBD5E1', fontWeight: 500 }}>{translateUI('playbook', currentLang)}:</span>
             <strong style={{ fontSize: '12px', color: '#FFFFFF', fontWeight: 700 }}>{formatContractName(contract?.name, currentLang, contract?.activityType)}</strong>
-            <span style={{
-              fontSize: '10.5px',
-              background: 'rgba(37, 84, 150, 0.35)',
-              color: '#93C5FD',
-              padding: '2px 7px',
-              borderRadius: '4px',
-              marginLeft: '4px',
-              fontWeight: 600,
-              border: '1px solid rgba(59, 130, 246, 0.3)'
-            }}>
-              {translateUI('statePrefix', currentLang)} {formatViewerState(viewerState, currentLang)}
-            </span>
+            {(contract?.activityType === 'vr' || contract?.name?.toLowerCase().includes('vr') || contract?.name?.toLowerCase().includes('spatial')) ? (
+              <span style={{
+                fontSize: '10.5px',
+                background: 'rgba(2, 132, 199, 0.45)',
+                color: '#38BDF8',
+                padding: '2px 7px',
+                borderRadius: '4px',
+                marginLeft: '4px',
+                fontWeight: 800,
+                border: '1px solid rgba(56, 189, 248, 0.7)',
+                boxShadow: '0 0 10px rgba(56, 189, 248, 0.5)'
+              }}>
+                🥽 VR ACTIVE
+              </span>
+            ) : (
+              <span style={{
+                fontSize: '10.5px',
+                background: 'rgba(37, 84, 150, 0.35)',
+                color: '#93C5FD',
+                padding: '2px 7px',
+                borderRadius: '4px',
+                marginLeft: '4px',
+                fontWeight: 600,
+                border: '1px solid rgba(59, 130, 246, 0.3)'
+              }}>
+                {translateUI('statePrefix', currentLang)} {formatViewerState(viewerState, currentLang)}
+              </span>
+            )}
 
             {modeTimer && (
               <span style={{
@@ -776,74 +827,92 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
           </div>
 
           {/* Alexa Voice Trigger buttons on Fire TV Client */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <button
-              type="button"
-              className="tv-top-action-btn"
-              onClick={() => runTvVoiceTypingAnimation('Feature Presentation')}
-              title="Test Alexa voice search on screen"
-              style={{
-                background: '#255496',
-                border: '1px solid rgba(59, 130, 246, 0.45)',
-                color: '#FFFFFF',
-                padding: '6px 12px',
-                borderRadius: '6px',
-                fontSize: '11.5px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px'
-              }}
-            >
-              <span>🎬</span>
-              <span style={{ color: '#FFFFFF' }}>{translateUI('chipInterstellar', currentLang)}</span>
-            </button>
-            <button
-              type="button"
-              className="tv-top-action-btn"
-              onClick={() => runTvVoiceTypingAnimation('Focus Terminal')}
-              title="Test Alexa focus stream command on screen"
-              style={{
-                background: 'rgba(30, 41, 59, 0.95)',
-                border: '1px solid rgba(255, 255, 255, 0.22)',
-                color: '#FFFFFF',
-                padding: '6px 12px',
-                borderRadius: '6px',
-                fontSize: '11.5px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px'
-              }}
-            >
-              <span>💻</span>
-              <span style={{ color: '#FFFFFF' }}>{translateUI('chipMatrix', currentLang)}</span>
-            </button>
-            <button
-              type="button"
-              className="tv-top-action-btn"
-              onClick={() => runTvVoiceTypingAnimation('VR Spatial Immersion')}
-              title="Test Alexa VR spatial command on screen"
-              style={{
-                background: 'rgba(30, 41, 59, 0.95)',
-                border: '1px solid rgba(255, 255, 255, 0.22)',
-                color: '#FFFFFF',
-                padding: '6px 12px',
-                borderRadius: '6px',
-                fontSize: '11.5px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px'
-              }}
-            >
-              <span>🥽</span>
-              <span style={{ color: '#FFFFFF' }}>{translateUI('chipVrStream', currentLang)}</span>
-            </button>
-          </div>
+          {(() => {
+            const isVr = (contract?.activityType === 'vr') || (contract?.name?.toLowerCase().includes('vr')) || (contract?.name?.toLowerCase().includes('spatial'));
+            const isFocus = !isVr && ((contract?.activityType === 'study') || (contract?.name?.toLowerCase().includes('focus')));
+            const isFeature = !isVr && !isFocus;
+            return (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <button
+                  type="button"
+                  className={`tv-top-action-btn ${isFeature ? 'active' : ''}`}
+                  onClick={() => runTvVoiceTypingAnimation('Feature Presentation')}
+                  title="Test Alexa voice search on screen"
+                  style={{
+                    background: isFeature ? '#2563EB' : 'rgba(30, 41, 59, 0.95)',
+                    border: isFeature ? '2px solid #93C5FD' : '1px solid rgba(255, 255, 255, 0.22)',
+                    color: '#FFFFFF',
+                    padding: '6px 12px',
+                    borderRadius: '6px',
+                    fontSize: '11.5px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    boxShadow: isFeature ? '0 0 14px rgba(37, 99, 235, 0.8)' : 'none',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <span>🎬</span>
+                  <span style={{ color: '#FFFFFF' }}>{translateUI('chipInterstellar', currentLang)}</span>
+                </button>
+                <button
+                  type="button"
+                  className={`tv-top-action-btn ${isFocus ? 'active' : ''}`}
+                  onClick={() => runTvVoiceTypingAnimation('Focus Terminal')}
+                  title="Test Alexa focus stream command on screen"
+                  style={{
+                    background: isFocus ? '#10B981' : 'rgba(30, 41, 59, 0.95)',
+                    border: isFocus ? '2px solid #34D399' : '1px solid rgba(255, 255, 255, 0.22)',
+                    color: '#FFFFFF',
+                    padding: '6px 12px',
+                    borderRadius: '6px',
+                    fontSize: '11.5px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    boxShadow: isFocus ? '0 0 14px rgba(16, 185, 129, 0.8)' : 'none',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <span>💻</span>
+                  <span style={{ color: '#FFFFFF' }}>{translateUI('chipMatrix', currentLang)}</span>
+                </button>
+                <button
+                  type="button"
+                  className={`tv-top-action-btn ${isVr ? 'active' : ''}`}
+                  onClick={() => runTvVoiceTypingAnimation('VR Spatial Immersion')}
+                  title="Test Alexa VR spatial command on screen"
+                  style={{
+                    background: isVr ? '#0284C7' : 'rgba(30, 41, 59, 0.95)',
+                    border: isVr ? '2px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.22)',
+                    color: '#FFFFFF',
+                    padding: '6px 12px',
+                    borderRadius: '6px',
+                    fontSize: '11.5px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    boxShadow: isVr ? '0 0 16px rgba(56, 189, 248, 0.9)' : 'none',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <span>🥽</span>
+                  <span style={{ color: '#FFFFFF' }}>{translateUI('chipVrStream', currentLang)}</span>
+                  {isVr && (
+                    <span style={{ fontSize: '9px', background: '#38BDF8', color: '#0F172A', fontWeight: 800, padding: '1px 5px', borderRadius: '3px', marginLeft: '4px' }}>
+                      ACTIVE
+                    </span>
+                  )}
+                </button>
+              </div>
+            );
+          })()}
 
           {/* Online Language Dropdown for Fire TV */}
           <div ref={langDropdownRef} style={{ position: 'relative', zIndex: 1000 }}>
@@ -1445,26 +1514,34 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
               {remoteActions.map((btn, idx) => {
                 const isFocused = idx === focusedBtnIndex;
+                const isModeActive = btn.isActive;
+                const isVrBtn = btn.modeType === 'vr';
                 return (
                   <button
-                    key={btn.label}
+                    key={btn.id || btn.label}
                     type="button"
-                    className={`tv-dpad-btn ${isFocused ? 'focused' : ''}`}
+                    className={`tv-dpad-btn ${isFocused ? 'focused' : ''} ${isModeActive ? 'active' : ''}`}
                     onClick={() => {
                       setFocusedBtnIndex(idx);
                       btn.action();
                     }}
                     style={{
-                      background: isFocused ? '#2563EB' : 'rgba(30, 41, 59, 0.95)',
+                      background: isModeActive 
+                        ? (isVrBtn ? '#0284C7' : '#2563EB') 
+                        : (isFocused ? '#2563EB' : 'rgba(30, 41, 59, 0.95)'),
                       color: '#FFFFFF',
-                      border: isFocused ? '2px solid #93C5FD' : '1px solid rgba(255, 255, 255, 0.28)',
+                      border: isModeActive
+                        ? (isVrBtn ? '2px solid #38BDF8' : '2px solid #93C5FD')
+                        : (isFocused ? '2px solid #93C5FD' : '1px solid rgba(255, 255, 255, 0.28)'),
                       padding: '9px 16px',
                       borderRadius: '10px',
                       fontSize: '12.5px',
                       fontWeight: 700,
                       cursor: 'pointer',
-                      boxShadow: isFocused ? '0 0 18px rgba(37, 99, 235, 0.85)' : '0 2px 6px rgba(0, 0, 0, 0.35)',
-                      transform: isFocused ? 'scale(1.04)' : 'scale(1)',
+                      boxShadow: isModeActive
+                        ? (isVrBtn ? '0 0 18px rgba(56, 189, 248, 0.9)' : '0 0 16px rgba(37, 99, 235, 0.85)')
+                        : (isFocused ? '0 0 18px rgba(37, 99, 235, 0.85)' : '0 2px 6px rgba(0, 0, 0, 0.35)'),
+                      transform: (isFocused || isModeActive) ? 'scale(1.04)' : 'scale(1)',
                       transition: 'all 0.15s ease',
                       display: 'inline-flex',
                       alignItems: 'center',
@@ -1474,6 +1551,19 @@ export function TvClient({ onExitTvMode, currentLang: propLang, onSelectLanguage
                     <span className="tv-dpad-label" style={{ color: '#FFFFFF', fontWeight: 700 }}>
                       {btn.label}
                     </span>
+                    {isModeActive && (
+                      <span style={{
+                        fontSize: '9px',
+                        background: isVrBtn ? '#38BDF8' : '#93C5FD',
+                        color: '#0F172A',
+                        fontWeight: 800,
+                        padding: '1px 5px',
+                        borderRadius: '3px',
+                        marginLeft: '4px'
+                      }}>
+                        ACTIVE
+                      </span>
+                    )}
                   </button>
                 );
               })}

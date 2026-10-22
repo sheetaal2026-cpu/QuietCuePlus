@@ -344,6 +344,7 @@ export class PersistentStore {
 
   public saveContract(contract: ViewingContract) {
     this.data.contracts[contract.contractId] = contract;
+    this.data.activeContractId = contract.contractId;
     this.save();
   }
 
