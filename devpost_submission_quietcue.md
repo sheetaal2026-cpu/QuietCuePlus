@@ -122,8 +122,16 @@ I architected QuietCue+ across a modern decoupled stack designed for television 
 
 ## Feedback for the Amazon Development Team
 
-I thoroughly enjoyed engineering QuietCue+ across Amazon Bedrock, Alexa+, and Fire TV. My key recommendations for the Amazon engineering teams include:
+I thoroughly enjoyed engineering QuietCue+ across Amazon Bedrock, Alexa+, and Fire TV. Here is my structured feedback across the core developer tools:
 
-1. Publishing an official npm polyfill for Fire TV remote D-pad key event normalization on web runtimes.
-2. Introducing a native Fire TV Web API for hardware-accelerated Picture-in-Picture [PiP] overlays.
-3. Providing an integrated audio ducking hook to let web applications temporarily attenuate background media when Alexa+ or synthesized alerts chime.
+### Tool 1: Amazon Bedrock Runtime SDK [@aws-sdk/client-bedrock-runtime]
+- What Worked Well: Fast response latency and high-precision structured reasoning across Claude and Titan models when extracting multi-tier rule parameters from voice input.
+- Developer Recommendation: Add native JSON schema enforcement directly into streaming runtime responses. This eliminates manual client-side regex or parsing fallbacks and reduces contract generation latency by another 100 to 200 milliseconds.
+
+### Tool 2: Model Context Protocol [MCP] TypeScript SDK [@modelcontextprotocol/sdk]
+- What Worked Well: Excellent protocol decoupling that enabled bidirectional event routing between Alexa+ voice agents, the Fire TV screen, and connected hardware sensors over Server-Sent Events.
+- Developer Recommendation: Provide an official AWS-managed MCP skill adapter for the Alexa Smart Home Skills API. Having an out-of-the-box bridge between Alexa smart home device state and MCP tools would eliminate the need to write custom proxy server endpoints.
+
+### Tool 3: Fire TV Web Application Framework & Media Controls
+- What Worked Well: Clean hardware acceleration, seamless remote D-Pad key navigation, and reliable video stream playback.
+- Developer Recommendation: Introduce an official system-level peripheral whisper channel in the Fire TV developer API. Allowing third-party apps to project subtle, non-intrusive notifications along the lower bezel without taking over video focus would make tactful home alert experiences standard across the Fire TV ecosystem.
