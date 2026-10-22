@@ -23,7 +23,7 @@ QuietCue+ is an intelligent attention guardian engineered for Fire TV and Alexa+
    - When life safety or perimeter alerts fire [front door camera, security sensors], QuietCue+ instantly surfaces an audible dual-tone chime and high-contrast Fire TV HUD banner.
 
 4. Lifestyle & Routine Care:
-   - Supports everyday wellness by gently surfacing hydration reminders, posture resets, and family celebration notices [such as Dad's Day and birthdays] during session breaks.
+   - Supports everyday wellness by gently surfacing hydration reminders, posture resets, and family celebration notices [such as Family Celebration days and birthdays] during session breaks.
 
 5. Amazon Bedrock & Alexa+ Integration:
    - Natural language rule synthesis via Alexa+ powered by Anthropic Claude 3.5 Sonnet on Amazon Bedrock.
