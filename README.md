@@ -2,7 +2,7 @@
   <img src="quietcue_github_banner.png" alt="QuietCue+ Hero Banner" width="100%" />
 </p>
 
-# QuietCue+ : Intelligent Attention Guardian for Connected Displays
+# QuietCue+: Intelligent Attention Guardian for Connected Displays
 
 > **"Context intelligence that knows when to speak, when to whisper, and when to wait."**
 
