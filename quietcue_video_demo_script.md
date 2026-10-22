@@ -11,7 +11,7 @@
 This script integrates your personal inspiration alongside all nine core project capabilities:
 1. **Personal Inspiration**: The fundamental gap of all-or-nothing smart home notifications.
 2. **Attention Playbook**: Customizable delivery contracts governing which alerts interrupt immediately and which alerts wait.
-3. **Alexa+ & Amazon Bedrock Simulation**: Instant compilation of voice intent into structured JSON policy rules.
+3. **Alexa Voice Calling & Auto Typing**: Live simulation console featuring voice chips like *"Alexa, play video stream"* and *"Alexa, start focus stream"*, with synthesized Alexa speech, real-time TV auto-typing, and Amazon Bedrock JSON compilation.
 4. **Active Modes and Streams**: Instant switching across Feature Night, Focus Mode, Sports Live, Family Time, and VR Immersion with 60fps video pairing.
 5. **Connected Devices**: Live multi-device simulation engine testing signals across Ring doorbells, delivery feeds, smart lights, and thermostats.
 6. **Sound Settings**: Custom audio governance with discrete critical two-tone chimes, gentle break chimes, and silent priority routing.
@@ -33,12 +33,12 @@ This script integrates your personal inspiration alongside all nine core project
 
 ---
 
-### Scene 2: Simulated Alexa+ Commands & Amazon Bedrock
+### Scene 2: Alexa Voice Calling, Auto Typing & Amazon Bedrock
 - **Timestamp**: 0:30 - 0:55 [25 seconds]
-- **Visual Focus**: Move to the **Alexa+ Conversation** panel on the dashboard.
-- **Screen Action**: Click one of the preset Alexa prompt chips [such as the Family Time chip]. Point out the resulting Amazon Bedrock policy compilation badge.
+- **Visual Focus**: The **Alexa Voice Calling & Auto Typing** panel on the dashboard.
+- **Screen Action**: Click a preset voice chip [such as *"Alexa, play video stream"* or *"Alexa, start focus stream"*]. Watch the command auto-type on the television display while Alexa speaks, followed by the Amazon Bedrock policy badge updating.
 - **Spoken Narration**:
-  "To test conversational control, I can trigger a simulated Alexa+ voice command directly from the console. Behind the scenes, Amazon Bedrock powered by Anthropic Claude 3.5 Sonnet compiles that natural request into a structured JSON policy contract, updating active attention rules in under 200 milliseconds with zero manual configuration."
+  "In this demo, I am using the Alexa Voice Calling and Auto Typing console to trigger simulated voice commands. When I click a command like 'Alexa, play video stream' or 'Alexa, start focus stream', Alexa speaks the synthesized response and the television automatically auto-types the text directly on screen. Behind the scenes, Amazon Bedrock powered by Anthropic Claude 3.5 Sonnet compiles that conversational request into a structured JSON policy contract, updating active attention rules in real time."
 
 ---
 
@@ -85,7 +85,7 @@ Hello! My inspiration for QuietCue+ started with a simple observation: while sma
 
 That opportunity inspired me to create QuietCue+: an intelligent attention governance engine for Alexa+ and Fire TV. By understanding your active session, QuietCue+ elevates home awareness, knowing exactly when to surface critical safety alerts immediately and when to hold everyday updates quietly until you pause. At the heart of the system is the Attention Playbook: customizable delivery contracts that govern which alerts interrupt immediately and which alerts wait.
 
-To test conversational control, I can trigger a simulated Alexa+ voice command directly from the console. Behind the scenes, Amazon Bedrock powered by Anthropic Claude 3.5 Sonnet compiles that natural request into a structured JSON policy contract, updating active attention rules in under 200 milliseconds with zero manual configuration.
+In this demo, I am using the Alexa Voice Calling and Auto Typing console to trigger simulated voice commands. When I click a command like 'Alexa, play video stream' or 'Alexa, start focus stream', Alexa speaks the synthesized response and the television automatically auto-types the text directly on screen. Behind the scenes, Amazon Bedrock powered by Anthropic Claude 3.5 Sonnet compiles that conversational request into a structured JSON policy contract, updating active attention rules in real time.
 
 QuietCue+ features Active Modes and Streams: instant switching across Feature Night, Focus Mode, Sports Live, Family Time, and VR Immersion, automatically pairing video playback with tailored attention rules. In this Fire TV client simulation, observe our closed-caption area. When routine notifications arrive, QuietCue+ does not cover the screen with large popups. Instead, it utilizes my subtitle-slot whisper channel, gliding non-critical updates smoothly into the caption space during dialogue pauses.
 

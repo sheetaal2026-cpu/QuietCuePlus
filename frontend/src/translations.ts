@@ -73,7 +73,7 @@ export const UI_TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> 
     "resumeTimer": "▶ Resume",
     "alexaVoiceHeader": "Alexa Voice Calling & Auto Typing",
     "alexaVoiceSub": "Click any command to hear Alexa speak & watch TV auto-type",
-    "categoryMovies": "Movies",
+    "categoryMovies": "Feature Streams",
     "categoryRoutines": "Lifestyle Routines",
     "categorySurprises": "Surprises",
     "chipInterstellar": "\"Alexa, play video stream\"",

@@ -770,10 +770,10 @@ function App() {
     setIsPlaying(nextPlaying);
     if (nextPlaying) {
       videoRef.current?.play().catch(() => {});
-      showToast('Fire TV Playback', 'Resumed movie playback. Watching state active.', '▶', 'info');
+      showToast('Fire TV Playback', 'Resumed video stream playback. Watching state active.', '▶', 'info');
     } else {
       videoRef.current?.pause();
-      showToast('Fire TV Playback', 'Paused movie playback. Viewer is now Paused.', '⏸', 'info');
+      showToast('Fire TV Playback', 'Paused video stream playback. Media state is now Paused.', '⏸', 'info');
     }
     try {
       await fetch('http://localhost:3001/api/action/set-viewer-state', {
