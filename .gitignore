@@ -36,6 +36,28 @@ audio_curation/
 # YouTube Channel and Video Branding Assets
 youtube_*
 **/youtube_*
+avatar_option_*
+**/avatar_option_*
+cute_logo_*
+**/cute_logo_*
+pixel_avatar_*
+**/pixel_avatar_*
+raw_audio_for_adobe_podcast/
+**/raw_audio_for_adobe_podcast/
+quietcue_raw_*
+**/quietcue_raw_*
+quietcue_refined_*
+**/quietcue_refined_*
+premier_soothing_music.*
+**/premier_soothing_music.*
+simple_logo_*
+**/simple_logo_*
+logo_*
+**/logo_*
+original_logo_*
+**/original_logo_*
+prism_*
+**/prism_*
 
 # Operating System & IDE Files
 .DS_Store

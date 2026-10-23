@@ -1,5 +1,7 @@
 <p align="center">
-  <img src="quietcue_github_banner.png" alt="QuietCue+ Hero Banner" width="100%" />
+  <a href="https://youtu.be/fXpSQ0uMSbs">
+    <img src="quietcue_github_banner.png" alt="QuietCue+ Hero Banner" width="100%" />
+  </a>
 </p>
 
 # QuietCue+: Intelligent Attention Guardian for Connected Displays
@@ -7,6 +9,18 @@
 > **"Context intelligence that knows when to speak, when to whisper, and when to wait."**
 
 QuietCue+ is an intelligent attention guardian engineered for Fire TV and Alexa+, powered by Amazon Bedrock and the open Model Context Protocol [MCP].
+
+---
+
+## Video Demonstration & Walkthrough
+
+Watch the complete demonstration showcasing QuietCue+ attention contracts, Alexa+ Bedrock intelligence, subtitle-slot whispers, and Fire TV simulation:
+
+<p align="center">
+  <a href="https://youtu.be/fXpSQ0uMSbs">
+    <img src="quietcue_devpost_player.png" alt="QuietCue+ YouTube Demonstration" width="100%" />
+  </a>
+</p>
 
 ---
 
